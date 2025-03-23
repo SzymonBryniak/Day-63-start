@@ -6,10 +6,21 @@
   </head>
   <body>
     <h1>My Library</h1>
+    
+    {% if data[0] == None %}
+
+    <h1>Library is empty.</h1>
+
+    {% else %}
+    {% for value in data %}
+    
     <ul>
-      <li></li>
+      <li>{{value["title"]}}-{{value['author']}}-{{value["rating"]}}</li>
     </ul>
 
-    <a href="">Add New Book</a>
+
+    {% endfor %}
+    {% endif %}
+    <a href="{{url_for('add')}}">Add New Book</a>
   </body>
 </html>
