@@ -15,7 +15,8 @@ This will install the packages from requirements.txt for this project.
 
 app = Flask(__name__)
 
-all_books = 1
+all_books = ["Library is empty."]
+
 
 
 @app.route('/')
@@ -25,10 +26,11 @@ def home():
 
 @app.route("/add", methods=["GET", "POST"])
 def add():
+    global all_books
     if request.form.get("bname") != None:
-        all_books=[]
         # all_books.append(request.form.get("bname"))
         # all_books.append(request.form.get("bauthor"))
+
         # all_books.append(request.form.get("brating"))
         
         all_books.append({"title": request.form.get("bname"),

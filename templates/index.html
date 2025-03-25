@@ -7,21 +7,24 @@
   <body>
     <h1>My Library</h1>
     
-    {% if data == 1 %}
+    {% if data|length == 1 %}
 
     <h1>Library is empty.</h1>
 
     
 
-    {% elif data != 1 %}
-    {% for value in data %}
-    
-    <ul>
-      <li>{{value["title"]}}-{{value['author']}}-{{value["rating"]}}</li>
-    </ul>
+    {% else %}
+      {% for value in data[:] %}
+      
+      
+      
+      <ul>
+        <li>{{value["title"]}}-{{value['author']}}-{{value["rating"]}}</li>
+      </ul>
 
 
-    {% endfor %}
+      {% endfor %}
+      
     {% endif %}
     <a href="{{url_for('add')}}">Add New Book</a>
   </body>
