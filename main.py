@@ -15,7 +15,7 @@ This will install the packages from requirements.txt for this project.
 
 app = Flask(__name__)
 
-all_books = ["Library is empty."]
+all_books = []
 
 
 

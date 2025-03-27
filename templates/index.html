@@ -7,15 +7,14 @@
   <body>
     <h1>My Library</h1>
     
-    {% if data|length == 1 %}
+    {% if data|length == 0 %}
 
     <h1>Library is empty.</h1>
 
-    
+
 
     {% else %}
-      {% for value in data[:] %}
-      
+      {% for value in data %}
       
       
       <ul>
