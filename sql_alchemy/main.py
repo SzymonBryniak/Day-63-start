@@ -2,12 +2,13 @@ from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import Integer, String, Float
+from extensions import db
 
 
 class Base(DeclarativeBase):
  pass
 
-db = SQLAlchemy(model_class=Base)
+
 
 # create the app
 app = Flask(__name__)
@@ -16,6 +17,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///new-books-collection.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Avoids a warning
 
 # initialize the app with the extension
+db = SQLAlchemy(app)  # app instead fo Base
 db.init_app(app)
 
 
@@ -25,8 +27,11 @@ class User(db.Model):
     author: Mapped[str]
     review: Mapped[float]
 
-
-
+class Users(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    email = db.Column(db.String(120), nullable=False)
+    
 
 if __name__ == '__main__':
     with app.app_context():
