@@ -2,23 +2,30 @@ from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import Integer, String, Float
-from extensions import db
+from flask_migrate import Migrate
 
 
 class Base(DeclarativeBase):
  pass
 
 
+db = SQLAlchemy(model_class=Base)  # app instead fo Base
+
 
 # create the app
 app = Flask(__name__)
 # configure the SQLite database, relative to the app instance folder
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///new-books-collection.db"
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Avoids a warning
-
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///./new-books-collection.db"
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Avoids a warning
 # initialize the app with the extension
-db = SQLAlchemy(app)  # app instead fo Base
 db.init_app(app)
+
+
+# class Books(db.Model):
+#   __tablename__ = "books"
+#   id = db.Column(db.Integer, primary_key=True)
+#   title = db.Column(db.String(200), nullable=False)
+#   email = db.Column(db.String(120), nullable=False)
 
 
 class User(db.Model):
@@ -27,16 +34,14 @@ class User(db.Model):
     author: Mapped[str]
     review: Mapped[float]
 
-class Users(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(200), nullable=False)
-    email = db.Column(db.String(120), nullable=False)
-    
 
-if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-    app.run()
+with app.app_context():
+    db.create_all()
+
+# if __name__ == '__main__':
+#     with app.app_context():
+#         db.create_all()
+#     app.run()
 
 # @app.route("/users")
 # def user_list():
