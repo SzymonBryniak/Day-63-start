@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import Integer, String, Float
-from flask_migrate import Migrate
 
 
 class Base(DeclarativeBase):
@@ -12,13 +11,17 @@ class Base(DeclarativeBase):
 db = SQLAlchemy(model_class=Base)  # app instead fo Base
 
 
+def create_app():
 # create the app
-app = Flask(__name__)
-# configure the SQLite database, relative to the app instance folder
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///./new-books-collection.db"
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Avoids a warning
-# initialize the app with the extension
-db.init_app(app)
+    app = Flask(__name__)
+    # configure the SQLite database, relative to the app instance folder
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///./new-books-collection.db"
+    # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Avoids a warning
+    # initialize the app with the extension
+    db.init_app(app)
+
+
+    return app
 
 
 # class Books(db.Model):
@@ -28,17 +31,22 @@ db.init_app(app)
 #   email = db.Column(db.String(120), nullable=False)
 
 
-class User(db.Model):
+class Books(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(unique=True)
     author: Mapped[str]
     review: Mapped[float]
 
 
+app = create_app()
+
+
 with app.app_context():
     db.create_all()
 
-
+student_john = Books(firstname='john', lastname='doe',
+                       email='jd@example.com', age=23,
+                       bio='Biology student')
 
 # if __name__ == '__main__':
 #     with app.app_context():
