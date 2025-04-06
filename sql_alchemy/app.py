@@ -31,6 +31,9 @@ def create_app():
 #   email = db.Column(db.String(120), nullable=False)
 
 
+app = create_app()
+
+
 class Books(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(unique=True)
@@ -38,15 +41,20 @@ class Books(db.Model):
     review: Mapped[float]
 
 
-app = create_app()
+book = Books(id=2, title='doe',
+                       author='jd@example.com',
+                       review='Biology student')
 
 
 with app.app_context():
     db.create_all()
+    db.session.add(book)
+    db.session.commit()
 
-student_john = Books(firstname='john', lastname='doe',
-                       email='jd@example.com', age=23,
-                       bio='Biology student')
+
+# student_john = Books(firstname='john', lastname='doe',
+#                        email='jd@example.com', age=23,
+#                        bio='Biology student')
 
 # if __name__ == '__main__':
 #     with app.app_context():
