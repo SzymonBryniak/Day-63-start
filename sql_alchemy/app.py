@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
 from sqlalchemy import Integer, String, Float
+from sqlalchemy import create_engine
 
 
 class Base(DeclarativeBase):
@@ -15,13 +16,14 @@ def create_app():
 # create the app
     app = Flask(__name__)
     # configure the SQLite database, relative to the app instance folder
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///./new-books-collection.db"
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///"
     # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Avoids a warning
+    
     # initialize the app with the extension
     db.init_app(app)
 
 
-    return app
+    return app 
 
 
 # class Books(db.Model):
@@ -35,10 +37,16 @@ app = create_app()
 
 
 class Books(db.Model):
+    __tablename__ = 'Books'
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(unique=True)
     author: Mapped[str]
     review: Mapped[float]
+
+
+engine = create_engine('sqlite:///./new-books-collection.db', echo = True)
+Session = sessionmaker(bind = engine)
+session = Session()
 
 
 book = Books(id=2, title='doe',
@@ -48,8 +56,10 @@ book = Books(id=2, title='doe',
 
 with app.app_context():
     db.create_all()
-    db.session.add(book)
-    db.session.commit()
+
+
+db.session.add(book)
+db.session.commit()
 
 
 # student_john = Books(firstname='john', lastname='doe',
