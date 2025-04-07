@@ -12,18 +12,15 @@ class Base(DeclarativeBase):
 db = SQLAlchemy(model_class=Base)  # app instead fo Base
 
 
-def create_app():
+
 # create the app
-    app = Flask(__name__)
-    # configure the SQLite database, relative to the app instance folder
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///"
-    # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Avoids a warning
-    
-    # initialize the app with the extension
-    db.init_app(app)
+app = Flask(__name__)
+# configure the SQLite database, relative to the app instance folder
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///./new-books-collection.db"
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Avoids a warning
 
-
-    return app 
+# initialize the app with the extension
+db.init_app(app)
 
 
 # class Books(db.Model):
@@ -33,7 +30,7 @@ def create_app():
 #   email = db.Column(db.String(120), nullable=False)
 
 
-app = create_app()
+# app = create_app()
 
 
 class Books(db.Model):
@@ -41,7 +38,7 @@ class Books(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(unique=True)
     author: Mapped[str]
-    review: Mapped[float]
+    review: Mapped[str]
 
 
 engine = create_engine('sqlite:///./new-books-collection.db', echo = True)
@@ -49,17 +46,15 @@ Session = sessionmaker(bind = engine)
 session = Session()
 
 
-book = Books(id=2, title='doe',
-                       author='jd@example.com',
-                       review='Biology student')
+book = Books(id=2, title='Harry Potter',
+                       author='J.K. Rowling',
+                       review='9.3')
 
 
 with app.app_context():
     db.create_all()
-
-
-db.session.add(book)
-db.session.commit()
+    db.session.add(book)
+    db.session.commit()
 
 
 # student_john = Books(firstname='john', lastname='doe',
