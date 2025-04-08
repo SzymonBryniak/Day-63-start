@@ -12,7 +12,6 @@ class Base(DeclarativeBase):
 db = SQLAlchemy(model_class=Base)  # app instead fo Base
 
 
-
 # create the app
 app = Flask(__name__)
 # configure the SQLite database, relative to the app instance folder
@@ -56,46 +55,34 @@ with app.app_context():
     db.session.add(book)
     db.session.commit()
 
+# Read A Particular Record By Query
+with app.app_context():
+    book = db.session.execute(db.select(Books).where(Books.title == "Harry Potter")).scalar()
+# To get a single element we can use scalar() instead of scalars().
 
-# student_john = Books(firstname='john', lastname='doe',
-#                        email='jd@example.com', age=23,
-#                        bio='Biology student')
 
-# if __name__ == '__main__':
-#     with app.app_context():
-#         db.create_all()
-#     app.run()
+# Update A Particular Record By Query
+with app.app_context():
+    book_to_update = db.session.execute(db.select(Books).where(Books.title == "Harry Potter")).scalar()
+    book_to_update.title = "Harry Potter and the Chamber of Secrets"
+    db.session.commit() 
 
-# @app.route("/users")
-# def user_list():
-#     users = db.session.execute(db.select(User).order_by(User.username)).scalars()
-#     return render_template("user/list.html", users=users)
 
-# @app.route("/users/create", methods=["GET", "POST"])
-# def user_create():
-#     if request.method == "POST":
-#         user = User(
-#             username=request.form["username"],
-#             email=request.form["email"],
-#         )
-#         db.session.add(user)
-#         db.session.commit()
-#         return redirect(url_for("user_detail", id=user.id))
+# Update A Record By PRIMARY KEY
+book_id = 1
+with app.app_context():
+    book_to_update = db.session.execute(db.select(Books).where(Books.id == book_id)).scalar()
+    # or book_to_update = db.get_or_404(Book, book_id)
+    book_to_update.title = "Harry Potter and the Goblet of Fire"
+    db.session.commit()  
+# Flask-SQLAlchemy also has some handy extra query methods like get_or_404() that we can use. Since Flask-SQLAlchemy version 3.0 the previous query methods like Book.query.get() have been deprecated
 
-#     return render_template("user/create.html")
 
-# @app.route("/user/<int:id>")
-# def user_detail(id):
-#     user = db.get_or_404(User, id)
-#     return render_template("user/detail.html", user=user)
-
-# @app.route("/user/<int:id>/delete", methods=["GET", "POST"])
-# def user_delete(id):
-#     user = db.get_or_404(User, id)
-
-#     if request.method == "POST":
-#         db.session.delete(user)
-#         db.session.commit()
-#         return redirect(url_for("user_list"))
-
-#     return render_template("user/delete.html", user=user)
+# Delete A Particular Record By PRIMARY KEY
+book_id = 1
+with app.app_context():
+    book_to_delete = db.session.execute(db.select(Books).where(Books.id == book_id)).scalar()
+    # or book_to_delete = db.get_or_404(Book, book_id)
+    db.session.delete(book_to_delete)
+    db.session.commit()
+# You can also delete by querying for a particular value e.g. by title or one of the other properties. Again, the get_or_404() method is quite handy.
