@@ -45,44 +45,46 @@ Session = sessionmaker(bind = engine)
 session = Session()
 
 
-book = Books(id=2, title='Harry Potter',
-                       author='J.K. Rowling',
-                       review='9.3')
+# book = Books(id=3, title='Harry Potter',
+#                        author='J.K. Rowling',
+#                        review='9.3')
 
 
 with app.app_context():
     db.create_all()
-    db.session.add(book)
+    # db.session.add(book)
     db.session.commit()
 
-# Read A Particular Record By Query
+
+# # Read A Particular Record By Query
 with app.app_context():
-    book = db.session.execute(db.select(Books).where(Books.title == "Harry Potter")).scalar()
+    book = db.session.execute(db.select(Books).where(Books.title == "Harry Potter")).scalars()
 # To get a single element we can use scalar() instead of scalars().
+print(book)
 
 
-# Update A Particular Record By Query
-with app.app_context():
-    book_to_update = db.session.execute(db.select(Books).where(Books.title == "Harry Potter")).scalar()
-    book_to_update.title = "Harry Potter and the Chamber of Secrets"
-    db.session.commit() 
+# # Update A Particular Record By Query
+# with app.app_context():
+#     book_to_update = db.session.execute(db.select(Books).where(Books.title == "Harry Potter")).scalar()
+#     book_to_update.title = "Harry Potter and the Chamber of Secrets"
+#     db.session.commit() 
 
 
-# Update A Record By PRIMARY KEY
-book_id = 1
-with app.app_context():
-    book_to_update = db.session.execute(db.select(Books).where(Books.id == book_id)).scalar()
-    # or book_to_update = db.get_or_404(Book, book_id)
-    book_to_update.title = "Harry Potter and the Goblet of Fire"
-    db.session.commit()  
-# Flask-SQLAlchemy also has some handy extra query methods like get_or_404() that we can use. Since Flask-SQLAlchemy version 3.0 the previous query methods like Book.query.get() have been deprecated
+# # Update A Record By PRIMARY KEY
+# book_id = 1
+# with app.app_context():
+#     book_to_update = db.session.execute(db.select(Books).where(Books.id == book_id)).scalar()
+#     # or book_to_update = db.get_or_404(Book, book_id)
+#     book_to_update.title = "Harry Potter and the Goblet of Fire"
+#     db.session.commit()  
+# # Flask-SQLAlchemy also has some handy extra query methods like get_or_404() that we can use. Since Flask-SQLAlchemy version 3.0 the previous query methods like Book.query.get() have been deprecated
 
 
-# Delete A Particular Record By PRIMARY KEY
-book_id = 1
-with app.app_context():
-    book_to_delete = db.session.execute(db.select(Books).where(Books.id == book_id)).scalar()
-    # or book_to_delete = db.get_or_404(Book, book_id)
-    db.session.delete(book_to_delete)
-    db.session.commit()
-# You can also delete by querying for a particular value e.g. by title or one of the other properties. Again, the get_or_404() method is quite handy.
+# # Delete A Particular Record By PRIMARY KEY
+# book_id = 1
+# with app.app_context():
+#     book_to_delete = db.session.execute(db.select(Books).where(Books.id == book_id)).scalar()
+#     # or book_to_delete = db.get_or_404(Book, book_id)
+#     db.session.delete(book_to_delete)
+#     db.session.commit()
+# # You can also delete by querying for a particular value e.g. by title or one of the other properties. Again, the get_or_404() method is quite handy.
