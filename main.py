@@ -1,22 +1,51 @@
 from flask import Flask, render_template, request, redirect, url_for
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
+from sqlalchemy import Integer, String, Float
+from sqlalchemy import create_engine
 
-'''
-Red underlines? Install the required packages first: 
-Open the Terminal in PyCharm (bottom left). 
+class Base(DeclarativeBase):
+ pass
 
-On Windows type:
-python -m pip install -r requirements.txt
 
-On MacOS type:
-pip3 install -r requirements.txt
+db = SQLAlchemy(model_class=Base)  # app instead fo Base
 
-This will install the packages from requirements.txt for this project.
-'''
 
+# create the app
+app = Flask(__name__)
+# configure the SQLite database, relative to the app instance folder
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///./new-books-collection.db"
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Avoids a warning
+
+# initialize the app with the extension
+db.init_app(app)
 app = Flask(__name__)
 
-all_books = []
 
+class Books(db.Model):
+    __tablename__ = 'Books'
+    id: Mapped[int] = mapped_column(primary_key=True)
+    title: Mapped[str] = mapped_column(unique=True)
+    author: Mapped[str]
+    review: Mapped[str]
+
+
+engine = create_engine('sqlite:///./new-books-collection.db', echo = True)
+Session = sessionmaker(bind = engine)
+session = Session()
+
+
+# book = Books(id=3, title='Harry Potter',
+#                        author='J.K. Rowling',
+#                        review='9.3')
+
+
+with app.app_context():
+    db.create_all()
+    # db.session.add(book)
+    db.session.commit()
+
+all_books = []
 
 
 @app.route('/')
