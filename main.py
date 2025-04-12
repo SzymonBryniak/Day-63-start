@@ -4,6 +4,7 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
 from sqlalchemy import Integer, String, Float
 from sqlalchemy import create_engine
 
+
 class Base(DeclarativeBase):
  pass
 
@@ -19,7 +20,6 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///./new-books-collection.db"
 
 # initialize the app with the extension
 db.init_app(app)
-app = Flask(__name__)
 
 
 class Books(db.Model):
@@ -42,8 +42,9 @@ session = Session()
 
 with app.app_context():
     db.create_all()
-    # db.session.add(book)
-    db.session.commit()
+    
+    
+
 
 all_books = []
 
@@ -59,14 +60,20 @@ def add():
     if request.form.get("bname") != None:
         # all_books.append(request.form.get("bname"))
         # all_books.append(request.form.get("bauthor"))
-
         # all_books.append(request.form.get("brating"))
-        
-        all_books.append({"title": request.form.get("bname"),
-                      "author": request.form.get("bauthor"),
-                      "rating": request.form.get("brating")})
-        print(all_books)
-    
+
+        # all_books.append({"title": request.form.get("bname"),
+        #               "author": request.form.get("bauthor"),
+        #               "rating": request.form.get("brating")})
+        # print(all_books)
+        book = Books(id=3, title=request.form.get("bname"),
+                       author=request.form.get("bauthor"),
+                       review=request.form.get("brating"))
+        print(book)
+        with app.app_context():
+            db.session.add(book)
+            db.session.commit()
+
 
     return render_template('add.html')
 
