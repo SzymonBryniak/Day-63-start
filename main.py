@@ -76,6 +76,9 @@ def add():
     with app.app_context():
          database = db.session.query(Books).all()
          for i in database:
+            all_books.append(i.title)
+            all_books.append(i.author)
+            all_books.append(i.review)
             print(i.author)
 
 
