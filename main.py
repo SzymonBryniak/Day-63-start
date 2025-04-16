@@ -54,14 +54,8 @@ def home():
 def add():
     global all_books
     if request.form.get("bname") != None:
-        # all_books.append(request.form.get("bname"))
-        # all_books.append(request.form.get("bauthor"))
-        # all_books.append(request.form.get("brating"))
+       
 
-        # all_books.append({"title": request.form.get("bname"),
-        #               "author": request.form.get("bauthor"),
-        #               "rating": request.form.get("brating")})
-        # print(all_books)
         book = Books(title=request.form.get("bname"),
                        author=request.form.get("bauthor"),
                        review=request.form.get("brating"))
@@ -76,10 +70,9 @@ def add():
     with app.app_context():
          database = db.session.query(Books).all()
          for i in database:
-            all_books.append(i.title)
-            all_books.append(i.author)
-            all_books.append(i.review)
-            print(i.author)
+            to_append = [i.title, i.author, i.review]
+            all_books.append(to_append)
+    print(all_books)
 
 
     return render_template('add.html')
