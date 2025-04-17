@@ -35,9 +35,6 @@ Session = sessionmaker(bind = engine)
 session = Session()
 
 
-# book = Books(id=3, title='Harry Potter',
-#                        author='J.K. Rowling',
-#                        review='9.3')
 with app.app_context():
     db.create_all()
 
