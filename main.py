@@ -40,7 +40,13 @@ with app.app_context():
 
 
 all_books = []
-
+with app.app_context():
+         database = db.session.query(Books).all()
+         print(database)
+         if not database:
+            for i in database:
+                to_append = [i.title, i.author, i.review]
+                all_books.append(to_append)
 
 
 @app.route('/')
