@@ -40,18 +40,29 @@ with app.app_context():
 
 
 all_books = []
+
+
 with app.app_context():
-         database = db.session.query(Books).all()
-         print(database)
-         if not database:
+        database = db.session.query(Books).all()
+        if not database:
             for i in database:
                 to_append = [i.title, i.author, i.review]
                 all_books.append(to_append)
 
 
+def read_database():
+    with app.app_context():
+        database = db.session.query(Books).all()
+        all_books.clear()
+        for i in database:
+            to_append = [i.title, i.author, i.review]
+            all_books.append(to_append)
+    return all_books
+
+
 @app.route('/')
 def home():
-    return render_template('index.html', data=all_books)
+    return render_template('index.html', data=read_database)
 
 
 @app.route("/add", methods=["GET", "POST"])
@@ -73,10 +84,10 @@ def add():
 
     with app.app_context():
          database = db.session.query(Books).all()
-         for i in database:
-            to_append = [i.title, i.author, i.review]
-            all_books.append(to_append)
-    print(all_books)
+         print(database)
+         to_append = [i.title, i.author, i.review]
+         all_books.append(to_append)
+    
 
 
     return render_template('add.html')
